@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "WestPlay",
-  "version": "2.4.0",
+  "version": "2.4.0-r1",
   "identifier": "app.westplay",
   "build": {
     "devUrl": "http://localhost:5173",
@@ -51,8 +51,8 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDU2OTc1ODBDNjdDNTc3Q0UKUldUT2Q4Vm5ERmlYVnQvV0dLdVVNUWtlcjlpKzB3MVVNeVJVeHhXNHFGVUNaU2xpVDNNVjhkWmEK",
-      "endpoints": ["https://github.com/enes-less/WestPlay/releases/latest/download/latest.json"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg1QzE3NzU0Nzc4MzcyRjMKUldUemNvTjNWSGZCaFZZNGZSc1hDcU0vMjFzaEk4TDU2QmZlZWhIaGI1T0pWSEdsenZHU3VBVkMK",
+      "endpoints": ["https://github.com/suagrsu/WestPlay/releases/latest/download/latest.json"],
       "requireSignedVersion": true,
       "windows": {
         "installMode": "passive"
