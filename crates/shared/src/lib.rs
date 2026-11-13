@@ -80,7 +80,10 @@ pub fn screen_layouts() -> &'static [ScreenLayout] {
 /// 2024) 19.87 x 11.35 cm (1.750:1); the DAF 2021's 22.37 x 12.58 cm and the Renault T 2024's 19.93 x 11.21 cm,
 /// 16:9, the frame's own. The Coaches DLC's (2026-11-12, their interiors' models' `gps.tobj` pieces, each showing
 /// its script's whole screen): the Scania Touring's 19.43 x 11.08 cm (1.754:1, its corners rounded), the MAN Lion's
-/// Coach 2024's 15.69 x 9.61 cm (1.633:1).
+/// Coach 2024's 15.69 x 9.61 cm (1.633:1). American Truck Simulator's (owner 2026-11-13: the Road Trip DLC's Ford
+/// Bronco and F-150, the Kenworth T680 2022, the Volvo VNLs 2018 and 2025) keep the frame's 16:9 until each is tuned
+/// in the cab with its truck's own screen (their scripts' "screen on" groups, which their displays show whole, and the
+/// trucks' screen pieces: the mod's `SHOWN_PARTS` and the UI's profiles, the Volvo FH's at the DAF's sizing first).
 pub fn page_height(index: usize) -> u32 {
     match screen_layouts().get(index).map(|layout| layout.id) {
         Some("generic") => 793,
@@ -971,6 +974,10 @@ mod tests {
         assert_eq!(page_height(index("man-lions-24")), 784);
         assert_eq!(page_height(index("daf-2021")), SCREEN_HEIGHT);
         assert_eq!(page_height(index("renault-t-2024")), SCREEN_HEIGHT);
+        // American Truck Simulator's, the frame's own until tuned in the cab (owner 2026-11-13).
+        for layout in ["ford", "kenworth", "volvo-vnl"] {
+            assert_eq!(page_height(index(layout)), SCREEN_HEIGHT, "{layout}");
+        }
         assert_eq!(page_height(screen_layouts().len()), SCREEN_HEIGHT);
     }
 

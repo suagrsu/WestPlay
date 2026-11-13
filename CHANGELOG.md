@@ -3,6 +3,12 @@
 What changed in each release of WestPlay. The newest release's notes are what the app shows when it offers the
 update.
 
+## Unreleased
+- In American Truck Simulator, WestPlay on the trucks' own screens: the Volvo VNL (2018 and 2025), the Kenworth T680
+  (2022), and the Road Trip DLC's Ford Bronco (2024) and Ford F-150 (2023), whose real ones have CarPlay. Each
+  screen is drawn at the frame's 16:9 for now, at their screens' sizing, until each is tuned in the cab with the
+  truck's own screen; the tablet stays in the game's other trucks.
+
 ## 2.4.0 (2026-11-13)
 - The Coaches DLC: WestPlay on the screens of the Scania Touring and the MAN Lion's Coach, shaped to each and drawn
   sharp. The game's parking camera shows over WestPlay, as on the game's own screen, and WestPlay under it takes no

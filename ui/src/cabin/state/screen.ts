@@ -22,6 +22,9 @@ export const SCREEN_LAYOUT_IDS = [
   'man-lions-coach',
   'scania-touring',
   'man-lions-24',
+  'ford',
+  'kenworth',
+  'volvo-vnl',
 ] as const
 
 export type ScreenLayoutId = (typeof SCREEN_LAYOUT_IDS)[number]
@@ -220,6 +223,13 @@ const PROFILES: readonly ProfileEntry[] = [
   // (owner 2026-11-12, 13). At 1.2, chosen by eye in the cab preview: three columns of apps. Two sidebar apps (owner
   // 2026-11-13, after seeing three).
   { layout: 'man-lions-24', profile: { name: "MAN Lion's Coach (2024)", oemStrip: null, scale: 1.2, recents: 2 } },
+  // American Truck Simulator's (owner 2026-11-13): each on its own screen, the whole of the script's "screen on" group
+  // their displays show (crates/setup game_mod.rs SHOWN_PARTS) at the frame's 16:9 page for now, at the DAF's sizing
+  // as the Renault T 2024's and the coaches' until tuned in the cab with each truck's own screen. No truck's own strip
+  // is drawn around them yet (a strip's insets come from its script's map area).
+  { layout: 'ford', profile: { name: 'Ford Bronco and F-150', oemStrip: null, scale: 1 } },
+  { layout: 'kenworth', profile: { name: 'Kenworth T680 (2022)', oemStrip: null, scale: 1 } },
+  { layout: 'volvo-vnl', profile: { name: 'Volvo VNL (2018 and 2025)', oemStrip: null, scale: 1 } },
 ]
 
 /** The sidebar's buttons on every screen: the tablet's twice their first size (owner 2026-11-11: smaller than a finger

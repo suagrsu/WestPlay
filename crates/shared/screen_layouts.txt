@@ -42,3 +42,12 @@ man-lions-coach   ui/dashboard/westplay_man_lions_coach_gps.sii
 # 512 x 256 surface the mod draws at 1024 x 512, of which their displays show the whole.
 scania-touring    ui/dashboard/scania_touring_23_gps.sii
 man-lions-24      ui/dashboard/man_lions_24_gps.sii
+# American Truck Simulator's (owner 2026-11-13), whose real ones have CarPlay: each its own script, named by its
+# truck's `computers.sui` (`gps_path`; the cars keep theirs under def/vehicle/car, the trucks under
+# def/vehicle/truck: both report `vehicle.<folder>` as their id). The Road Trip DLC's Ford Bronco and F-150 (real
+# ones have SYNC 4 with CarPlay), and the Kenworth T680 (2022) and Volvo VNLs (2018, 2025), whose own screens
+# replace the game's, one script each (no km/h and mph pair). Their screens' shapes' page heights are the frames'
+# for now (crates/shared page_height), each tuned with the truck's own in the cab.
+ford              ui/dashboard/ford_bronco_gps_24.sii ui/dashboard/ford_f150_gps_23.sii
+kenworth          ui/dashboard/kenworth_t680_2022_gps.sii
+volvo-vnl         ui/dashboard/volvo_vnl2018_gps.sii ui/dashboard/volvo_vnl2025_gps.sii

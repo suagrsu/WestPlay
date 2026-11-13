@@ -98,6 +98,9 @@ pub struct ShownPart {
 /// side, the Renault T 2024's 0.5% of every side, the Volvo FH's (2021 and 2024) 0.54% and 0.55%; the frame's
 /// margin and round corners were cut by up to 7 pixels there. (The Smart Dash Advanced's 0.1% is under a pixel; the
 /// Smart Dash's display shows all of its.) Each page is laid out in its part's shape (westplay_shared `page_height`).
+/// American Truck Simulator's (owner 2026-11-13) aren't here yet: their displays show each script's "screen on" group
+/// whole (in its shape, so nothing is cut off), which is WestPlay's image's own area, and each truck's screen
+/// piece's thin edge (the trucks' `gps.tobj` piece, as the others') is read in the cab with the truck.
 const SHOWN_PARTS: &[(&str, ShownPart)] = &[
     ("generic", ShownPart { left: 0.005, right: 0.995, top: 0.122, bottom: 0.735 }),
     ("daf-2021", ShownPart { left: 0.0025, right: 0.9975, top: 0.0, bottom: 1.0 }),

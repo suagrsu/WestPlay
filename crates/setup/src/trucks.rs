@@ -6,7 +6,12 @@
 //! the Scania S and R with their 7" screen among them); the DAF 2021 (XF, XG, XG+) names
 //! `daf_2021_gps.sii`; the Scania S and R's Smart Dash interior (`interior/computers_2025.sui`)
 //! `scania_2025_gps.sii`; the Renault T's 2024 interior `renault_t_2024_gps.sii`; the Iveco S-Way's
-//! `iveco_sway_ic10_gps.sii` (its UK interiors' `iveco_sway_ic10_gps_mph.sii`).
+//! `iveco_sway_ic10_gps.sii` (its UK interiors' `iveco_sway_ic10_gps_mph.sii`). American Truck Simulator's (1.62):
+//! the Kenworth T680 (2022) `kenworth_t680_2022_gps.sii`, the Volvo VNLs (2018, 2025) `volvo_vnl2018_gps.sii` and
+//! `volvo_vnl2025_gps.sii`, and the Road Trip DLC's cars, the Ford Bronco and F-150 (`def/vehicle/car/ford.bronco_24`
+//! and `ford.f150_23`) `ford_bronco_gps_24.sii` and `ford_f150_gps_23.sii`, each in its `computers.sui`. The cars
+//! keep their definitions under `def/vehicle/car`, the trucks' under `def/vehicle/truck`, both reporting
+//! `vehicle.<folder>` as their id.
 
 use westplay_mapdata::files::GameFiles;
 
@@ -21,6 +26,9 @@ pub enum Source {
     /// A bus of the game's (the Coaches DLC's, 2026-11-12: buses its own kind of vehicle beside trucks): its
     /// definition, `def/vehicle/bus/<id>/data.sii`.
     Bus(&'static str),
+    /// A car of the game's (American Truck Simulator's Road Trip DLC, 2026-11-13): its definition,
+    /// `def/vehicle/car/<id>/data.sii` (the trucks' are under `def/vehicle/truck`).
+    Car(&'static str),
     /// A mod's, found by these words (all of them, in its name or file name): installed (in the game's `mod`
     /// folder or the Workshop), active in a profile or not.
     Mod(&'static [&'static str]),
@@ -141,10 +149,42 @@ pub const TRUCKS: &[Truck] = &[
 ];
 
 /// ATS's: the trucks whose real counterparts offer CarPlay (owner 2026-10-28; PLAN.md, ATS support), each on its own
-/// screen once WestPlay draws there (`layout` `None` until then: ATS support, phase 4), and the tablet in any other.
+/// screen once WestPlay draws there (`layout` `None` until then: ATS support, phase 4; the Volvo VNLs and the
+/// Kenworth T680 drawn 2026-11-13), and the tablet in any other.
 pub const ATS_TRUCKS: &[Truck] = &[
-    Truck { id: "volvo-vnl-2018", name: "Volvo VNL (2018)", source: Source::Game("volvo.vnl2018"), layout: None },
-    Truck { id: "volvo-vnl-2025", name: "Volvo VNL (2025)", source: Source::Game("volvo.vnl2025"), layout: None },
+    // Their own screens, WestPlay on them (owner 2026-11-13: the game's definitions' `gps_path` scripts).
+    Truck {
+        id: "volvo-vnl-2018",
+        name: "Volvo VNL (2018)",
+        source: Source::Game("volvo.vnl2018"),
+        layout: Some("volvo-vnl"),
+    },
+    Truck {
+        id: "volvo-vnl-2025",
+        name: "Volvo VNL (2025)",
+        source: Source::Game("volvo.vnl2025"),
+        layout: Some("volvo-vnl"),
+    },
+    Truck {
+        id: "kenworth-t680-2022",
+        name: "Kenworth T680 (2022)",
+        source: Source::Game("kenworth.t680_2022"),
+        layout: Some("kenworth"),
+    },
+    // The Road Trip DLC's cars (real ones have SYNC 4 with CarPlay), under `def/vehicle/car` (a car is no truck: the
+    // tablet isn't in it, `tablet::trucks` reading the trucks alone).
+    Truck {
+        id: "ford-bronco-2024",
+        name: "Ford Bronco (2024)",
+        source: Source::Car("ford.bronco_24"),
+        layout: Some("ford"),
+    },
+    Truck {
+        id: "ford-f150-2023",
+        name: "Ford F-150 (2023)",
+        source: Source::Car("ford.f150_23"),
+        layout: Some("ford"),
+    },
     Truck { id: "volvo-vnr-electric", name: "Volvo VNR Electric", source: Source::Game("volvo.vnr_e"), layout: None },
     Truck {
         id: "freightliner-cascadia-2019",
@@ -156,12 +196,6 @@ pub const ATS_TRUCKS: &[Truck] = &[
         id: "freightliner-cascadia-2024",
         name: "Freightliner Cascadia (2024) - digital dash",
         source: Source::Game("freightliner.cascadia2024"),
-        layout: None,
-    },
-    Truck {
-        id: "kenworth-t680-2022",
-        name: "Kenworth T680 (2022)",
-        source: Source::Game("kenworth.t680_2022"),
         layout: None,
     },
     Truck { id: "western-star-57x", name: "Western Star 57X", source: Source::Game("westernstar.57x"), layout: None },
@@ -212,6 +246,7 @@ pub fn fit(
             let in_game = match truck.source {
                 Source::Game(id) => files.read(&format!("def/vehicle/truck/{id}/data.sii")).ok().flatten().is_some(),
                 Source::Bus(id) => files.read(&format!("def/vehicle/bus/{id}/data.sii")).ok().flatten().is_some(),
+                Source::Car(id) => files.read(&format!("def/vehicle/car/{id}/data.sii")).ok().flatten().is_some(),
                 Source::Mod(words) => {
                     let has = |named: &str| {
                         let named = named.to_lowercase();
@@ -324,17 +359,50 @@ mod tests {
     }
 
     #[test]
-    fn atss_trucks_are_its_own_their_screens_not_yet() {
-        let (files, root) = game_with(&["volvo.vnl2018", "mack.anthem"]);
-        // The stock screen patched (as ATS's mod has it): the trucks on it still not WestPlay's there.
+    fn atss_trucks_are_its_own_and_their_screens_drawn() {
+        let (files, root) = game_with(&["volvo.vnl2018", "kenworth.t680_2022", "mack.anthem"]);
+        // The stock screen patched (as ATS's mod has it): the trucks on it aren't WestPlay's there.
         let fits = fit(Kind::Ats, &files, &["generic", "tablet"], &[], &[]);
         let of = |id: &str| fits.iter().find(|(truck, _)| truck.id == id).unwrap().1;
+        // Its own script patched: WestPlay on its own screen. The VNL (2018)'s layout is the 2025's too.
         assert_eq!(of("volvo-vnl-2018"), Fit::NotYet);
+        assert_eq!(of("kenworth-t680-2022"), Fit::NotYet);
         assert_eq!(of("mack-anthem"), Fit::NotYet);
         assert_eq!(of("peterbilt-579"), Fit::NotInGame);
         assert_eq!(of("any-truck-tablet"), Fit::Ready);
+        let drawn = fit(Kind::Ats, &files, &["generic", "tablet", "volvo-vnl", "kenworth"], &[], &[]);
+        let of = |id: &str| drawn.iter().find(|(truck, _)| truck.id == id).unwrap().1;
+        assert_eq!(of("volvo-vnl-2018"), Fit::Ready);
+        assert_eq!(of("kenworth-t680-2022"), Fit::Ready);
+        // The 2025 isn't in this game.
+        assert_eq!(of("volvo-vnl-2025"), Fit::NotInGame);
+        // The Anthem keeps its stock screen (WestPlay's only on the Scania's in ETS2).
+        assert_eq!(of("mack-anthem"), Fit::NotYet);
         // None of ETS2's.
         assert!(fits.iter().all(|(truck, _)| !truck.id.starts_with("daf-")));
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_car_is_found_among_the_games_cars_not_the_trucks() {
+        // The Road Trip DLC's Fords, under def/vehicle/car (owner 2026-11-13), with a truck of the same folder's name
+        // that mustn't count.
+        let root = std::env::temp_dir().join(format!("westplay-trucks-cars-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        for (kind, id) in [("car", "ford.f150_23"), ("truck", "ford.bronco_24")] {
+            let dir = root.join(format!("def/vehicle/{kind}/{id}"));
+            std::fs::create_dir_all(&dir).unwrap();
+            std::fs::write(dir.join("data.sii"), "SiiNunit\n{\n}\n").unwrap();
+        }
+        let files = GameFiles::new(vec![Mount::Folder(root.clone())]);
+        let fits = fit(Kind::Ats, &files, &["tablet", "ford"], &[], &[]);
+        let of = |id: &str| fits.iter().find(|(truck, _)| truck.id == id).unwrap().1;
+        assert_eq!(of("ford-f150-2023"), Fit::Ready);
+        // A truck's folder of its name isn't the car.
+        assert_eq!(of("ford-bronco-2024"), Fit::NotInGame);
+        // Not a truck (no tablet of WestPlay's in a car's dashboard).
+        let tablet = crate::tablet::trucks(&files).unwrap();
+        assert!(tablet.iter().all(|spot| !spot.truck.starts_with("ford")), "{tablet:?}");
         let _ = std::fs::remove_dir_all(&root);
     }
 }
